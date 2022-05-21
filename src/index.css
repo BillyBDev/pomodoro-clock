@@ -1,13 +1,90 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: -apple-system, 'Roboto Mono', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(155, 53, 50);
+  color: white;
+  text-align: center;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* css order:
+1. outer sizing and attributes
+2. inner content 
+
+go out-to-in
+*/
+
+.card {
+  /* display: flex;
+  flex-wrap: wrap; */
+  position: relative;
+  border: 3px solid #282828;
+  background-color: #a2a2a8;
+  color: #242424;
+  margin: 300px auto 0;
+  width: 300px;
+  height: 360px;
+  box-shadow: 1px 2px 8px -2px rgba(0,0,0,0.76);
+  -webkit-box-shadow: 1px 2px 8px -2px rgba(0,0,0,0.76);
+  -moz-box-shadow: 1px 2px 8px -2px rgba(0,0,0,0.76);
+}
+
+#start_stop {
+  margin-top: 30px;
+  width: 100%;
+  font-size: 2em;
+}
+
+#middle {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.top-mid-label {
+  margin: 20px 0 5px;
+  width: 45%;
+}
+
+.adj-btn {
+  width: 15%;
+}
+
+#timer-label {
+  position: absolute;
+  width: 70%;
+  bottom: 60px;
+  right: 0px;
+  font-size: 1.35em;
+}
+
+#time-box {
+  position: absolute;
+  width: 70%;
+  padding: 5px 0;
+  bottom: 0px;
+  right: 0px;
+  background-color: #4a4a4a;
+  border-top: 3px solid #282828;
+  border-left: 3px solid #282828;
+}
+
+#time-left {
+  color: orangered;
+  font-size: 2em;
+}
+
+
+
+
+
+
+
