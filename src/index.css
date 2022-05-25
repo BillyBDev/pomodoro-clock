@@ -5,7 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: rgb(155, 53, 50);
+  background-color: #b23148;
   color: white;
   text-align: center;
 }
@@ -29,7 +29,7 @@ go out-to-in
   border: 3px solid #282828;
   background-color: #a2a2a8;
   color: #242424;
-  margin: 300px auto 0;
+  margin: 15vh auto 0;
   width: 300px;
   height: 360px;
   box-shadow: 1px 2px 8px -2px rgba(0,0,0,0.76);
@@ -38,9 +38,20 @@ go out-to-in
 }
 
 #start_stop {
-  margin-top: 30px;
-  width: 100%;
-  font-size: 2em;
+  margin: 30px auto 12px;
+  width: 40%;
+  background-color: #DDD;
+  border: 2px solid #242424;
+  padding-left: 2px;
+  font-size: 2.5em;
+}
+
+#reset {
+  width: 20%;
+  margin: 0 auto;
+  border: 2px solid #242424;
+  background-color: #999;
+  font-size: 1.25em;
 }
 
 #middle {
@@ -50,7 +61,7 @@ go out-to-in
 }
 
 .top-mid-label {
-  margin: 20px 0 5px;
+  margin: 15px 0 5px;
   width: 45%;
 }
 
@@ -61,9 +72,9 @@ go out-to-in
 #timer-label {
   position: absolute;
   width: 70%;
-  bottom: 60px;
+  bottom: 55px;
   right: 0px;
-  font-size: 1.35em;
+  font-size: 1.25em;
 }
 
 #time-box {
