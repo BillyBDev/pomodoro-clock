@@ -8,10 +8,8 @@ function App() {
   const [time, setTime] = useState("25:00");
   const defaultTimeSettings = {"session": 25, "break": 5};
   const [timeSettings, setTimeSettings] = useState(defaultTimeSettings);
-  // const [breakLength, setBreakLength] = useState(5);
-  // const [sessionLength, setSessionLength] = useState(25);
   const [isRunning, setIsRunning] = useState(false);
-  const [runningType, setRunningType] = useState("session");
+  const [isBreak, setIsBreak] = useState(false);
 
   let timeoutID;
 
@@ -39,9 +37,9 @@ function App() {
 
     if (minutes < 0) {
       document.getElementById("beep").play();
-
-      // alert("end!");
-      // (runningType === "session" ? setRunningType("break") : setRunningType("session"));
+      (isBreak ? updateTime(timeSettings["session"]) : updateTime(timeSettings["break"]));
+      setIsBreak(!isBreak);
+      return;
     }
 
     minutes = minutes.toString()
@@ -53,6 +51,13 @@ function App() {
     setTime(minutes + ":" + seconds);
   }
 
+  function updateTime(newTime){
+    let str = newTime.toString();
+    if (str.length === 1) str = "0" + str;
+    str += ":00";
+    setTime(str);
+  }
+
   function adjustSetting(sessionType, amount){
     if (isRunning) return;
 
@@ -61,12 +66,8 @@ function App() {
     
     if ( newSetting[sessionType] < 1 || newSetting[sessionType] > 60) return;
 
-    if (sessionType === runningType) {
-      // update current time based on new setting
-      let newTime = newSetting[sessionType].toString();
-      if (newTime.length === 1) newTime = "0" + newTime;
-      newTime += ":00";
-      setTime(newTime);
+    if ((sessionType === "session" && isBreak === false) || (sessionType === "break" && isBreak === true)) {
+      updateTime(newSetting[sessionType]);
     }
 
     setTimeSettings(newSetting);
@@ -74,13 +75,13 @@ function App() {
 
   return (
     <>
-      <audio preload="auto" id="beep" src="https://soundcamp.org/sounds/382/decreasing_beeping_z7s.mp3"></audio>
+      <audio preload="auto" id="beep" src="https://cdn.pixabay.com/download/audio/2021/08/09/audio_7232134569.mp3?filename=success_bell-6776.mp3"></audio>
       <div className="card">
         <div 
           onClick={
             toggleTimer
           }
-        id="start_stop">
+        id="start_stop" class="btn">
           {isRunning ? "⏸" : "▶"}
         </div>
 
@@ -91,25 +92,26 @@ function App() {
               setTime("25:00");
               setTimeSettings(defaultTimeSettings);
               setIsRunning(false);
-              setRunningType("session");
+              setIsBreak(false);
+              document.getElementById("beep").load();
             }
         } 
-        id="reset">↺</div>
+        id="reset" class="btn">↺</div>
         
         <div id="middle">
           <div id="break-label" class="top-mid-label">Break Length</div>
           <div id="session-label" class="top-mid-label">Session Length</div>
 
-          <div onClick={() => {adjustSetting("break", -1)}} id="break-decrement" class="adj-btn">ᐯ</div>
+          <div onClick={() => {adjustSetting("break", -1)}} id="break-decrement" class="btn adj-btn">ᐯ</div>
           <div id="break-length">{timeSettings["break"]}</div>            
-          <div onClick={() => {adjustSetting("break", 1)}} id="break-increment" class="adj-btn">ᐱ</div>
+          <div onClick={() => {adjustSetting("break", 1)}} id="break-increment" class="btn adj-btn">ᐱ</div>
 
-          <div onClick={() => {adjustSetting("session", -1)}} id="session-decrement" class="adj-btn">ᐯ</div>
+          <div onClick={() => {adjustSetting("session", -1)}} id="session-decrement" class="btn adj-btn">ᐯ</div>
           <div id="session-length">{timeSettings["session"]}</div>                  
-          <div onClick={() => {adjustSetting("session", 1)}} id="session-increment" class="adj-btn">ᐱ</div>
+          <div onClick={() => {adjustSetting("session", 1)}} id="session-increment" class="btn adj-btn">ᐱ</div>
         </div>
 
-        <div id="timer-label">Session</div>
+        <div id="timer-label">{(isBreak ? "Break:" : "Session:")}</div>
         
         <div id="time-box">
           <div id="time-left">{time}</div>
