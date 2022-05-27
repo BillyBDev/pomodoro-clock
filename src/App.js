@@ -6,8 +6,10 @@ function App() {
   
 
   const [time, setTime] = useState("25:00");
-  const defaultTimeSettings = {"session": 25, "break": 5};
-  const [timeSettings, setTimeSettings] = useState(defaultTimeSettings);
+  // const defaultTimeSettings = {"session": 25, "break": 5};
+  // const [timeSettings, setTimeSettings] = useState(defaultTimeSettings);
+  const [breakLength, setBreakLength] = useState(5);
+  const [sessionLength, setSessionLength] = useState(25);
   const [isRunning, setIsRunning] = useState(false);
   const [isBreak, setIsBreak] = useState(false);
 
@@ -22,7 +24,15 @@ function App() {
     if (isRunning){
       timeoutID = setTimeout(tickDown, 1000);
     }
-  })
+  }, [isRunning, time])
+
+  useEffect(() => {
+    if(isBreak) updateTime(breakLength)
+  }, [breakLength])
+
+  useEffect(() => {
+    if(!isBreak) updateTime(sessionLength)
+  }, [sessionLength])
 
   function tickDown(){
     let minutes = Number(time.slice(0, 2));
@@ -37,7 +47,7 @@ function App() {
 
     if (minutes < 0) {
       document.getElementById("beep").play();
-      (isBreak ? updateTime(timeSettings["session"]) : updateTime(timeSettings["break"]));
+      (isBreak ? updateTime(sessionLength) : updateTime(breakLength));
       setIsBreak(!isBreak);
       return;
     }
@@ -58,19 +68,37 @@ function App() {
     setTime(str);
   }
 
-  function adjustSetting(sessionType, amount){
-    if (isRunning) return;
+  // function adjustSetting(sessionType, amount){
+  //   if (isRunning) return;
 
-    let newSetting = {...timeSettings};
-    newSetting[sessionType] += amount;
+  //   let newSetting = {...timeSettings};
+  //   newSetting[sessionType] += amount;
     
-    if ( newSetting[sessionType] < 1 || newSetting[sessionType] > 60) return;
+  //   if ( newSetting[sessionType] < 1 || newSetting[sessionType] > 60) return;
 
-    if ((sessionType === "session" && isBreak === false) || (sessionType === "break" && isBreak === true)) {
-      updateTime(newSetting[sessionType]);
+  //   if ((sessionType === "session" && isBreak === false) || (sessionType === "break" && isBreak === true)) {
+  //     updateTime(newSetting[sessionType]);
+  //   }
+
+  //   setTimeSettings(newSetting);
+  // }
+
+  function adjustSetting(isBreakArg, amount){
+    if (isRunning) return;
+    
+    if (isBreakArg){
+      
+      setBreakLength(prev => {
+        if ((amount > 0 && prev >= 60) || (amount < 0 && prev <= 1)) return prev;
+        return prev + amount
+      })
+    } else {
+      
+      setSessionLength(prev => {
+        if ((amount > 0 && prev >= 60) || (amount < 0 && prev <= 1)) return prev;
+        return prev + amount;
+      })
     }
-
-    setTimeSettings(newSetting);
   }
 
   return (
@@ -90,7 +118,8 @@ function App() {
             () => {
               clearTimeout(timeoutID);
               setTime("25:00");
-              setTimeSettings(defaultTimeSettings);
+              setBreakLength(5);
+              setSessionLength(25);
               setIsRunning(false);
               setIsBreak(false);
               document.getElementById("beep").load();
@@ -102,13 +131,13 @@ function App() {
           <div id="break-label" class="top-mid-label">Break Length</div>
           <div id="session-label" class="top-mid-label">Session Length</div>
 
-          <div onClick={() => {adjustSetting("break", -1)}} id="break-decrement" class="btn adj-btn">ᐯ</div>
-          <div id="break-length">{timeSettings["break"]}</div>            
-          <div onClick={() => {adjustSetting("break", 1)}} id="break-increment" class="btn adj-btn">ᐱ</div>
+          <div onClick={() => {adjustSetting(true, -1)}} id="break-decrement" class="btn adj-btn">ᐯ</div>
+          <div id="break-length">{breakLength}</div>            
+          <div onClick={() => {adjustSetting(true, 1)}} id="break-increment" class="btn adj-btn">ᐱ</div>
 
-          <div onClick={() => {adjustSetting("session", -1)}} id="session-decrement" class="btn adj-btn">ᐯ</div>
-          <div id="session-length">{timeSettings["session"]}</div>                  
-          <div onClick={() => {adjustSetting("session", 1)}} id="session-increment" class="btn adj-btn">ᐱ</div>
+          <div onClick={() => {adjustSetting(false, -1)}} id="session-decrement" class="btn adj-btn">ᐯ</div>
+          <div id="session-length">{sessionLength}</div>                  
+          <div onClick={() => {adjustSetting(false, 1)}} id="session-increment" class="btn adj-btn">ᐱ</div>
         </div>
 
         <div id="timer-label">{(isBreak ? "Break:" : "Session:")}</div>
