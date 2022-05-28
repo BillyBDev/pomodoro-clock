@@ -50,8 +50,8 @@ go out-to-in
   width: 40%;
   background-color: #DDD;
   border: 2px solid #242424;
-  padding-left: 2px;
-  font-size: 2.5em;
+  padding: 5px 0 5px 2px;
+  font-size: 2em;
 }
 
 #reset {
@@ -103,9 +103,31 @@ go out-to-in
   font-size: 2em;
 }
 
+#footer {
+  margin: 4px auto;
+  width: 280px;
+  color: white;
+  font-size: 0.8em;
+  text-align: right;
+  text-decoration: none;
+}
 
+a {
+  color: white;
+}
 
+a:link {
+  text-decoration: none;
+}
 
+a:visited {
+  text-decoration: none;
+}
 
+a:hover {
+  text-decoration: underline;
+}
 
-
+a:active {
+  text-decoration: underline;
+}

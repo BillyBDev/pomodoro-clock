@@ -1,13 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
 
-  
-
   const [time, setTime] = useState("25:00");
-  // const defaultTimeSettings = {"session": 25, "break": 5};
-  // const [timeSettings, setTimeSettings] = useState(defaultTimeSettings);
   const [breakLength, setBreakLength] = useState(5);
   const [sessionLength, setSessionLength] = useState(25);
   const [isRunning, setIsRunning] = useState(false);
@@ -21,20 +17,32 @@ function App() {
   }
 
   useEffect(() => {
+    document.title = (isBreak ? "Break" : "Session") + " - " + time;
+    if (time === "00:00"){
+      document.getElementById("beep").play();
+      (isBreak ? numToTime(sessionLength) : numToTime(breakLength));
+      setIsBreak(!isBreak);
+      return;
+    }
     if (isRunning){
+      // eslint-disable-next-line
       timeoutID = setTimeout(tickDown, 1000);
     }
   }, [isRunning, time])
 
   useEffect(() => {
-    if(isBreak) updateTime(breakLength)
+    if(isBreak) numToTime(breakLength)
+    // eslint-disable-next-line
   }, [breakLength])
 
   useEffect(() => {
-    if(!isBreak) updateTime(sessionLength)
+    if(!isBreak) numToTime(sessionLength)
+    // eslint-disable-next-line
   }, [sessionLength])
 
   function tickDown(){
+    if (!isRunning) return;
+    
     let minutes = Number(time.slice(0, 2));
     let seconds = Number(time.slice(3));
 
@@ -43,13 +51,6 @@ function App() {
     if (seconds < 0) {
       seconds = 59;
       minutes--;
-    }
-
-    if (minutes < 0) {
-      document.getElementById("beep").play();
-      (isBreak ? updateTime(sessionLength) : updateTime(breakLength));
-      setIsBreak(!isBreak);
-      return;
     }
 
     minutes = minutes.toString()
@@ -61,39 +62,22 @@ function App() {
     setTime(minutes + ":" + seconds);
   }
 
-  function updateTime(newTime){
+  function numToTime(newTime){
     let str = newTime.toString();
     if (str.length === 1) str = "0" + str;
     str += ":00";
     setTime(str);
   }
 
-  // function adjustSetting(sessionType, amount){
-  //   if (isRunning) return;
-
-  //   let newSetting = {...timeSettings};
-  //   newSetting[sessionType] += amount;
-    
-  //   if ( newSetting[sessionType] < 1 || newSetting[sessionType] > 60) return;
-
-  //   if ((sessionType === "session" && isBreak === false) || (sessionType === "break" && isBreak === true)) {
-  //     updateTime(newSetting[sessionType]);
-  //   }
-
-  //   setTimeSettings(newSetting);
-  // }
-
   function adjustSetting(isBreakArg, amount){
-    if (isRunning) return;
+    if (isRunning && (isBreakArg === isBreak)) return;
     
     if (isBreakArg){
-      
       setBreakLength(prev => {
         if ((amount > 0 && prev >= 60) || (amount < 0 && prev <= 1)) return prev;
         return prev + amount
       })
     } else {
-      
       setSessionLength(prev => {
         if ((amount > 0 && prev >= 60) || (amount < 0 && prev <= 1)) return prev;
         return prev + amount;
@@ -105,24 +89,21 @@ function App() {
     <>
       <audio preload="auto" id="beep" src="https://cdn.pixabay.com/download/audio/2021/08/09/audio_7232134569.mp3?filename=success_bell-6776.mp3"></audio>
       <div className="card">
-        <div 
-          onClick={
-            toggleTimer
-          }
-        id="start_stop" class="btn">
-          {isRunning ? "⏸" : "▶"}
+        <div onClick={toggleTimer} id="start_stop" class="btn">
+          <i id="play-pause-icon" className={(isRunning ? "fa-solid fa-pause" : "fa-solid fa-play")}></i>
         </div>
 
         <div 
           onClick={
             () => {
+              setIsRunning(false);
               clearTimeout(timeoutID);
               setTime("25:00");
               setBreakLength(5);
               setSessionLength(25);
-              setIsRunning(false);
               setIsBreak(false);
-              document.getElementById("beep").load();
+              document.getElementById("beep").pause();
+              document.getElementById("beep").fastSeek(0);
             }
         } 
         id="reset" class="btn">↺</div>
@@ -147,6 +128,10 @@ function App() {
         </div>
 
 
+      </div>
+
+      <div id="footer">
+        <a className="footer" href="https://www.freecodecamp.org/learn/front-end-development-libraries/front-end-development-libraries-projects/build-a-25--5-clock" target="_blank" rel="noreferrer">Pomodoro Timer Project</a> <br /> by <a href="https://www.billybdev.com" target="_blank" rel="noreferrer">Billy Brown III</a>
       </div>
     </>
   );
