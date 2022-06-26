@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
@@ -131,7 +132,7 @@ function App() {
       </div>
 
       <div id="footer">
-        <a className="footer" href="https://www.freecodecamp.org/learn/front-end-development-libraries/front-end-development-libraries-projects/build-a-25--5-clock" target="_blank" rel="noreferrer">Pomodoro Timer Project</a> <br /> by <a href="https://www.billybdev.com" target="_blank" rel="noreferrer">Billy Brown III</a>
+        <a className="footer" href="https://www.freecodecamp.org/learn/front-end-development-libraries/front-end-development-libraries-projects/build-a-25--5-clock" target="_blank" rel="noreferrer">Pomodoro Timer Project</a> <br /> by <a href="https://www.billybrowniii.com" target="_blank" rel="noreferrer">Billy Brown III</a>
       </div>
     </>
   );
